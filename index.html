@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Elfium Art | Портфолио</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ======================================================= */
+        /* == ГЛОБАЛЬНЫЕ СТИЛИ =================================== */
+        /* ======================================================= */
+        :root {
+            --bg-dark: #0F0F0F;
+            --text-light: #FFFFFF;
+            --line-subtle: #333333; 
+            --text-dimmed: #AAAAAA;
+            --transition-duration: 0.25s;
+            --tile-bg: #1a1a1a;
+            --tile-border: #282828;
+            --color-accent: #ECAF93;
+
+            /* === ПЕРЕМЕННАЯ ДЛЯ РАЗМЕРА ХЕДЕРА (ПО ЗАПРОСУ ПОЛЬЗОВАТЕЛЯ) === */
+            --header-height: 80px;
+            /* =============================================================== */
+
+            /* === НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ ОТСТУПОВ === */
+            --spacing-xl: 50px; /* Большой отступ (между секциями/разделителями) */
+            --spacing-l: 24px; /* Средний отступ (контент/сетки) */
+            --spacing-m: 20px; /* Малый отступ (внутри блоков) */
+            /* ==================================== */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            /* >>>>>>>>>>>>>>>>>>> ИЗМЕНЕНИЕ: УВЕЛИЧЕННЫЙ ОТСТУП СВЕРХУ <<<<<<<<<<<<<<<<<< */
+            /* Используем calc() для автоматической подстройки под высоту хедера */
+            padding-top: calc(var(--header-height) + 40px); 
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-weight: 300;
+            position: relative;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ======================================================= */
+        /* == 1. АНИМАЦИЯ ПОЯВЛЕНИЯ (БЕЗ ЗАДЕРЖЕК) ======================= */
+        /* ======================================================= */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Классы delay-N удалены, чтобы вся анимация была одновременной */
+        .animated-block {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards; /* Все элементы запускаются сразу */
+            animation-delay: 0s !important; /* Гарантируем отсутствие задержки */
+        }
+
+
+        /* ======================================================= */
+        /* == ХЕДЕР И НАВИГАЦИЯ ================================== */
+        /* ======================================================= */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--header-height); /* ИСПОЛЬЗУЕМ НОВУЮ ПЕРЕМЕННУЮ */
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(236, 175, 147, 0.2);
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
+        }
+
+        .logo {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-light);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            margin-right: var(--spacing-m); /* Используем переменную */
+        }
+
+        .nav-links a {
+            color: var(--text-dimmed);
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 0.9em;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-light);
+        }
+
+        /* == СТИЛИ ДЛЯ ПЕРЕКЛЮЧАТЕЛЯ ЯЗЫКА ==================== */
+        .language-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--line-subtle);
+            overflow: hidden;
+            height: 32px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .lang-button {
+            color: var(--text-dimmed);
+            text-decoration: none;
+            font-size: 0.8em;
+            font-weight: 500;
+            padding: 0 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            height: 100%;
+            line-height: 30px;
+        }
+
+        .lang-button.active {
+            color: var(--bg-dark);
+            background-color: var(--color-accent);
+            cursor: default;
+            border: 1px solid var(--color-accent);
+            box-sizing: border-box;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        /* ======================================================= */
+        /* == СЕКЦИИ И ТЕКСТ ===================================== */
+        /* ======================================================= */
+        /* УНИФИЦИРУЕМ ОТСТУПЫ РАЗДЕЛИТЕЛЯ */
+        .divider-wrapper {
+            width: 100%;
+            padding: 0;
+            box-sizing: border-box;
+            /* УМЕНЬШЕН ГРАДИЕНТ ДЛЯ БОЛЕЕ ЯРКОГО ЦЕНТРА */
+            background: linear-gradient(to right,
+                var(--bg-dark) 0%,
+                var(--line-subtle) 25%, /* Сдвиг к центру */
+                var(--line-subtle) 75%, /* Сдвиг к центру */
+                var(--bg-dark) 100%
+            );
+            height: 1px;
+            margin: var(--spacing-xl) 0; /* ОТСТУП СВЕРХУ/СНИЗУ МЕЖДУ СЕКЦИЯМИ */
+        }
+
+        /* СТАНДАРТИЗИРУЕМ ОТСТУП МЕЖДУ СЕКЦИЯМИ */
+        .section {
+            padding: 0; /* УДАЛЕНО */
+            background-color: transparent;
+            margin-bottom: var(--spacing-xl); /* Отступ после секции */
+        }
+
+        /* ОТСТУП МЕЖДУ ТЕГ-ЗАГОЛОВКОМ И ГЛАВНЫМ ЗАГОЛОВКОМ */
+        .section-title {
+            color: var(--color-accent);
+            font-size: 0.85em;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 0; /* СНИЖАЕМ ОТСТУП */
+        }
+
+        /* Заголовки h2 - тоньше */
+        h2 {
+            color: var(--text-light);
+            font-size: 2.8em;
+            font-weight: 400;
+            margin-top: 5px; /* УМЕНЬШАЕМ ОТСТУП, ЧТОБЫ ПРИБЛИЗИТЬ К .section-title */
+            margin-bottom: var(--spacing-l); /* СТАНДАРТНЫЙ ОТСТУП ПЕРЕД ОСНОВНЫМ КОНТЕНТОМ */
+            line-height: 1.1;
+        }
+
+        /* LAYOUT: Разделяем текст (60%) и список (40%) */
+        .about-content {
+            display: flex;
+            gap: var(--spacing-l); /* Используем переменную */
+            align-items: flex-start;
+        }
+
+        .about-text {
+            width: 60%;
+            max-width: 60%;
+            font-size: 1.0em;
+            line-height: 1.8;
+            color: var(--text-dimmed);
+            font-weight: 300;
+        }
+
+        /* ======================================================= */
+        /* == 1. СПИСОК НАВЫКОВ (ПРОСТО СПРАВА) ================== */
+        /* ======================================================= */
+        .skills-visualization {
+            width: 40%;
+            padding-top: 0; /* УДАЛЕН ИЗЛИШНИЙ ОТСТУП */
+            height: auto;
+            box-sizing: border-box;
+        }
+
+        .skills-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            margin-top: var(--spacing-m); /* Уменьшаем отступ сверху, чтобы он соответствовал тексту */
+        }
+
+        .skills-list li {
+            font-size: 1em;
+            font-weight: 500;
+            color: var(--text-light);
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--line-subtle); 
+            position: relative;
+            padding-left: 15px;
+            cursor: default;
+            transition: color var(--transition-duration);
+        }
+
+        .skills-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* HOVER ЭФФЕКТ ДЛЯ ТЕКСТА */
+        .skills-list li:hover {
+            color: var(--color-accent);
+        }
+
+        .skills-list li::before {
+            content: '•';
+            color: var(--color-accent);
+            font-size: 1em;
+            line-height: 1;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: color var(--transition-duration);
+        }
+
+        /* HOVER ЭФФЕКТ ДЛЯ ТОЧКИ */
+        .skills-list li:hover::before {
+            color: var(--color-accent);
+        }
+
+
+        /* ======================================================= */
+        /* == 2. КАРТОЧКИ ПРОЕКТОВ (СТИЛИ И АНИМАЦИИ) ============ */
+        /* ======================================================= */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-m); /* Используем переменную */
+            padding-top: 0; /* УДАЛЕНО */
+        }
+
+        .card-wrapper {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .project-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: var(--tile-bg);
+            border: 1px solid var(--line-subtle); 
+            overflow: hidden;
+            cursor: pointer;
+
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            height: 100%;
+
+            position: relative;
+            padding: var(--spacing-m); /* Используем переменную */
+            box-sizing: border-box;
+            text-decoration: none;
+
+            transition: border-color var(--transition-duration) ease-out,
+                         background-color var(--transition-duration) ease-out,
+                         transform var(--transition-duration) ease-out;
+            transform: translateY(0);
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 0;
+            background-color: var(--color-accent);
+            transition: width var(--transition-duration) ease-out;
+            z-index: 10;
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            background-color: #202020;
+            border-color: var(--color-accent);
+        }
+
+        .project-card:hover::after {
+            width: 100%;
+        }
+
+        .project-card h3 {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--text-light);
+            letter-spacing: 0.05em;
+            margin: 0;
+        }
+
+        .project-card p {
+            font-size: 0.9em;
+            color: var(--text-dimmed);
+            margin: 5px 0 0 0;
+            font-weight: 300;
+        }
+
+        .project-meta-bottom {
+            position: absolute;
+            bottom: var(--spacing-m); /* Используем переменную */
+            right: var(--spacing-m); /* Используем переменную */
+            color: var(--color-accent);
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 500;
+        }
+
+        .project-card.placeholder-card {
+            cursor: default;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .project-card.placeholder-card:hover {
+            transform: translateY(0);
+            background-color: var(--tile-bg);
+            border-color: var(--line-subtle);
+        }
+
+        .project-card.placeholder-card::after {
+            width: 0;
+        }
+
+        /* Текст "в разработке" - тоньше и чуть меньше */
+        .project-card.placeholder-card .content-centered p {
+            font-size: 1.4em;
+            font-weight: 400;
+            color: var(--text-dimmed);
+            letter-spacing: 0.05em;
+            margin: 0;
+            text-transform: none;
+        }
+
+        .project-card.placeholder-card .content-centered {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        /* ======================================================= */
+        /* == 3. ПЛИТКИ КОНТАКТОВ ================================ */
+        /* ======================================================= */
+        /* УБИРАЕМ ОТСТУП, КОТОРЫЙ УЖЕ ЕСТЬ В .section */
+        #contact-footer {
+            padding: 0; /* УДАЛЕНО */
+            background-color: transparent;
+            border-top: none;
+            margin-bottom: var(--spacing-xl); /* Добавляем отступ после "футера", чтобы не прилипало к краю */
+        }
+        
+        /* УБИРАЕМ АВТОМАТИЧЕСКИЙ ОТСТУП СЕКЦИИ */
+        .container:last-of-type .section {
+            margin-bottom: 0;
+        }
+
+        .contact-tiles-big {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-m); /* Используем переменную */
+            margin-top: var(--spacing-l); /* Используем переменную */
+        }
+
+        .contact-tile {
+            display: flex !important;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+
+            background-color: var(--tile-bg);
+            border: 1px solid var(--tile-border); 
+            padding: 25px;
+            position: relative;
+            text-decoration: none;
+            min-height: 100px;
+            width: 100%;
+            box-sizing: border-box;
+
+            transition: border-color var(--transition-duration) ease-out,
+                         transform var(--transition-duration) ease-out;
+            transform: translateY(0);
+        }
+
+        /* СТИЛИ КОПИРОВАНИЯ - АНИМАЦИЯ */
+        .contact-tile.copied {
+            border-color: #43b581; /* Зеленый цвет Discord для подтверждения */
+            transform: scale(0.98);
+        }
+
+        .contact-tile-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-tile::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 0;
+            background-color: var(--color-accent);
+            transition: width var(--transition-duration) ease-out;
+            z-index: 10;
+        }
+
+        .contact-tile:hover {
+            transform: translateY(-6px);
+            border-color: var(--color-accent);
+        }
+
+        .contact-tile:hover::after {
+            width: 100%;
+        }
+
+        .contact-tile h4 {
+            color: var(--text-dimmed);
+            font-size: 0.9em;
+            font-weight: 400;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            line-height: 1.2;
+        }
+
+        /* Контактная информация - меньше и тоньше */
+        .contact-tile p {
+            color: var(--text-light);
+            font-size: 1.2em;
+            font-weight: 500;
+            margin: 5px 0 0 0;
+            word-break: break-all;
+            line-height: 1.2;
+        }
+
+        /* Иконки контактов - больше */
+        .contact-tile svg {
+            fill: var(--text-dimmed);
+            transition: fill var(--transition-duration) ease-out;
+            margin-right: 15px;
+            align-self: center;
+            min-width: 48px;
+            height: 48px;
+        }
+
+        .contact-tile:hover svg {
+            fill: var(--color-accent);
+        }
+
+        /* ======================================================= */
+        /* == ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ О КОПИРОВАНИИ ============== */
+        /* ======================================================= */
+        .copy-notification {
+            position: fixed;
+            bottom: var(--spacing-m); /* Используем переменную */
+            left: 50%;
+            transform: translateX(-50%) translateY(100px); 
+            background-color: #43b581; /* Зеленый Discord */
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: 500;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease-out;
+            letter-spacing: 0.05em;
+        }
+
+        .copy-notification.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ======================================================= */
+        /* == АДАПТИВНОСТЬ ======================================= */
+        /* ======================================================= */
+        @media (max-width: 900px) {
+            .about-content { flex-direction: column; }
+            .about-text, .skills-visualization { width: 100%; max-width: 100%; }
+            .skills-visualization { margin-top: var(--spacing-l); } /* Добавляем отступ сверху */
+
+            /* >>>>>>>>>>>>>>>>>> ИЗМЕНЕНИЕ: УМЕНЬШЕНИЕ ОТСТУПОВ <<<<<<<<<<<<<<<<<< */
+            :root {
+                --spacing-xl: 60px; /* 80px -> 60px */
+                --spacing-l: 30px; /* 40px -> 30px */
+                --spacing-m: 15px; /* 20px -> 15px */
+                /* ДОБАВЛЕНИЕ МОБИЛЬНОЙ ПЕРЕМЕННОЙ ДЛЯ ВЫСОТЫ ХЕДЕРА */
+                --header-height: 60px;
+            }
+
+            .header { height: var(--header-height); padding: 0 5%; } /* ИСПОЛЬЗУЕМ НОВУЮ ПЕРЕМЕННУЮ */
+            .logo { font-size: 1em; }
+            .nav-links { display: none; }
+
+            .header-controls {
+                width: auto;
+                justify-content: flex-end;
+            }
+            .language-switcher { margin-left: auto; }
+
+            /* >>>>>>>>>>>>>>>>>> ОТСТУП СВЕРХУ (МОБИЛЬНЫЙ) <<<<<<<<<<<<<<<<<< */
+            body { padding-top: calc(var(--header-height) + 40px); } /* ИСПОЛЬЗУЕМ CALC() */
+            
+            .section { margin-bottom: var(--spacing-xl); }
+            h2 { font-size: 2.2em; margin-bottom: var(--spacing-m); }
+            .about-text { font-size: 0.95em; }
+            .divider-wrapper { margin: var(--spacing-xl) 0; height: 1px; }
+            .portfolio-grid, .contact-tiles-big { grid-template-columns: 1fr; gap: var(--spacing-m); }
+            .contact-tile p { font-size: 1.1em; }
+            .contact-tile svg { min-width: 40px; height: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="copy-notification" class="copy-notification">
+        Discord скопирован!
+    </div>
+
+    <div class="header">
+        <a href="#" class="logo animated-block">Elfium Art</a>
+        <div class="header-controls">
+            <nav class="nav-links">
+                <a href="#about-section" class="animated-block" data-lang="nav_about">ОБО МНЕ</a>
+                <a href="#portfolio-section" class="animated-block" data-lang="nav_projects">ПРОЕКТЫ</a>
+                <a href="#contact-footer" class="animated-block" data-lang="nav_contact">КОНТАКТЫ</a>
+            </nav>
+            <div class="language-switcher animated-block">
+                <button class="lang-button" data-language="en">EN</button>
+                <button class="lang-button active" data-language="ru">RU</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="about-section" class="container">
+        <div class="section">
+            <p class="section-title animated-block" data-lang="section_developer">// ОБО МНЕ</p>
+            <h2 class="animated-block" data-lang="about_title">Создаю уникальные и запоминающиеся игровые миры.</h2>
+            <div class="about-content">
+                <div class="about-text animated-block">
+                    <p data-lang="about_p1">Я — <strong>мультипрофильный гейм-девелопер</strong>, специализирующийся на визуальной части проекта с глубоким пониманием полного цикла разработки. Мой опыт включает работу с <strong>UI/UX</strong>, создание <strong>Game Ready Assets</strong>, <strong>анимацию персонажей</strong>, разработку <strong>визуальных и звуковых эффектов</strong>, создание <strong>шейдеров</strong> и <strong>векторной графики</strong>.</p>
+                    <p data-lang="about_p2">Мой подход основан на принципах <strong>Technical Art</strong>: я создаю визуал, который <strong>идеально интегрируется в движок</strong>, так как глубоко понимаю архитектуру кода и оптимизацию ресурсов. Это исключает конфликты и гарантирует, что дизайн, анимация и эффекты работают максимально эффективно (Godot, Unity и т.д.).</p>
+                    <p data-lang="about_p3">Я отлично понимаю, <strong>что нравится игрокам и цепляет их глаз</strong>. Умею создавать <strong>аддиктивные анимации</strong> и привлекательный визуал, что является критически важным фактором в <strong>коммерческом</strong> игровом производстве для обеспечения удержания и монетизации. Свяжитесь со мной для сотрудничества.</p>
+                </div>
+                <div class="skills-visualization animated-block">
+                    <ul class="skills-list">
+                        <li class="animated-block" data-lang="skill_uiux">UI / UX Design</li>
+                        <li class="animated-block" data-lang="skill_char">Арт персонажей / Риггинг / Анимация</li>
+                        <li class="animated-block" data-lang="skill_vfx">VFX / SFX / Шейдеры</li>
+                        <li class="animated-block" data-lang="skill_vector">Векторная и Пиксельная графика</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="divider-wrapper animated-block"></div>
+
+    <div id="portfolio-section" class="container">
+        <div class="section">
+            <p class="section-title animated-block" data-lang="section_projects">// ПРОЕКТЫ</p>
+            <h2 class="animated-block" data-lang="projects_title">Избранные работы.</h2>
+            
+            <div class="portfolio-grid">
+                <div class="card-wrapper animated-block">
+                    <a href="child_of_shades_project.html" class="project-card">
+                        <div>
+                            <h3>Дитя Теней</h3>
+                            <p data-lang="child_of_shades_project_desc">2D мобильная игра в жанре side-scroller</p>
+                        </div>
+                        <div class="project-meta-bottom" data-lang="project_view">ПОСМОТРЕТЬ ПРОЕКТ →</div>
+                    </a>
+                </div>
+
+                <div class="card-wrapper animated-block">
+                    <div class="project-card placeholder-card">
+                        <div class="content-centered">
+                             <p data-lang="project_wip">в разработке</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-wrapper animated-block">
+                    <div class="project-card placeholder-card">
+                        <div class="content-centered">
+                             <p data-lang="project_wip">в разработке</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="divider-wrapper animated-block"></div>
+
+    <div id="contact-footer">
+        <div class="container">
+            <p class="section-title animated-block" data-lang="section_contact">// КОНТАКТЫ</p>
+            <h2 class="animated-block" data-lang="contact_title">Свяжитесь со мной.</h2>
+
+            <div class="contact-tiles-big">
+
+                <div class="card-wrapper animated-block">
+                    <a href="https://t.me/hx3k11" target="_blank" class="contact-tile telegram-tile">
+                        <svg fill="var(--text-dimmed)" width="48px" height="48px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m20.665 3.717-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
+                        </svg>
+                        <div class="contact-tile-content">
+                            <h4>Telegram</h4>
+                            <p>@hx3k11</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card-wrapper animated-block">
+                    <a class="contact-tile discord-tile" data-copy-value="elfiumdev">
+                        <svg fill="var(--text-dimmed)" width="48px" height="48px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+                            <path d="M18.942 5.556a16.299 16.299 0 0 0-4.126-1.297c-.178.321-.385.754-.529 1.097a15.175 15.175 0 0 0-4.573 0 11.583 11.583 0 0 0-.535-1.097 16.274 16.274 0 0 0-4.129 1.3c-2.611 3.946-3.319 7.794-2.965 11.587a16.494 16.494 0 0 0 5.061 2.593 12.65 12.65 0 0 0 1.084-1.785 10.689 10.689 0 0 1-1.707-.831c.143-.106.283-.217.418-.331 3.291 1.539 6.866 1.539 10.118 0 .137.114.277.225.418.331-.541.326-1.114.606-1.71.832a12.52 12.52 0 0 0 1.084 1.785 16.46 16.46 0 0 0 5.064-2.595c.415-4.396-.709-8.209-2.973-11.589zM8.678 14.813c-.988 0-1.798-.922-1.798-2.045s.793-2.047 1.798-2.047 1.815.922 1.798 2.047c.001 1.123-.793 2.045-1.798 2.045zm6.644 0c-.988 0-1.798-.922-1.798-2.045s.793-2.047 1.798-2.047 1.815.922 1.798 2.047c0 1.123-.793 2.045-1.798 2.045z"/>
+                        </svg>
+                        <div class="contact-tile-content">
+                            <h4>Discord</h4>
+                            <p>elfiumdev</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card-wrapper animated-block">
+                    <a href="mailto:elfiumart@gmail.com" class="contact-tile email-tile">
+                        <svg fill="var(--text-dimmed)" width="48px" height="48px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+                            <g>
+                                <g>
+                                    <path d="M16,16.8l13.8-9.2C29.2,5.5,27.3,4,25,4H7C4.7,4,2.8,5.5,2.2,7.6L16,16.8z"/>
+                                </g>
+                                <g>
+                                    <path d="M16.6,18.8C16.4,18.9,16.2,19,16,19s-0.4-0.1-0.6-0.2L2,9.9V23c0,2.8,2.2,5,5,5h18c2.8,0,5-2.2,5-5V9.9L16.6,18.8z"/>
+                                </g>
+                            </g>
+                        </svg>
+                        <div class="contact-tile-content">
+                            <h4>Email</h4>
+                            <p>elfiumart@gmail.com</p>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        // === ПЕРЕВОДЫ (ТОЛЬКО ДЛЯ JS, CSS СТИЛИ ВЫШЕ) =================
+        const translations = {
+            ru: {
+                // Header
+                page_title: 'Elfium Art | Портфолио',
+                nav_about: 'ОБО МНЕ',
+                nav_projects: 'ПРОЕКТЫ',
+                nav_contact: 'КОНТАКТЫ',
+                // About Section
+                section_developer: '// ОБО МНЕ',
+                about_title: 'Создаю уникальные и запоминающиеся игровые миры.',
+                about_p1: 'Я — <strong>мультипрофильный гейм-девелопер</strong>, специализирующийся на визуальной части проекта с глубоким пониманием полного цикла разработки. Мой опыт включает работу с <strong>UI/UX</strong>, создание <strong>Game Ready Assets</strong>, <strong>анимацию персонажей</strong>, разработку <strong>визуальных и звуковых эффектов</strong>, создание <strong>шейдеров</strong> и <strong>векторной графики</strong>.',
+                about_p2: 'Мой подход основан на принципах <strong>Technical Art</strong>: я создаю визуал, который <strong>идеально интегрируется в движок</strong>, так как глубоко понимаю архитектуру кода и оптимизацию ресурсов. Это исключает конфликты и гарантирует, что дизайн, анимация и эффекты работают максимально эффективно (Godot, Unity и т.д.).',
+                about_p3: 'Я отлично понимаю, <strong>что нравится игрокам и цепляет их глаз</strong>. Умею создавать <strong>аддиктивные анимации</strong> и привлекательный визуал, что является критически важным фактором в <strong>коммерческом</strong> игровом производстве для обеспечения удержания и монетизации. Свяжитесь со мной для сотрудничества.',
+                // Skills
+                skill_uiux: 'UI / UX Design',
+                skill_char: 'Арт персонажей / Риггинг / Анимация',
+                skill_vfx: 'VFX / SFX / Шейдеры',
+                skill_vector: 'Векторная и Пиксельная графика',
+                // Projects Section
+                section_projects: '// ПРОЕКТЫ',
+                projects_title: 'Избранные работы.',
+                child_of_shades_project_title: 'Дитя Теней"',
+                child_of_shades_project_desc: '2D мобильная игра в жанре side-scroller',
+                project_view: 'ПОСМОТРЕТЬ ПРОЕКТ →',
+                project_wip: 'в разработке',
+                // Contact Section
+                section_contact: '// КОНТАКТЫ',
+                contact_title: 'Свяжитесь со мной.',
+                copy_message: 'Discord скопирован!'
+            },
+            en: {
+                // Header
+                page_title: 'Elfium Art | Portfolio',
+                nav_about: 'ABOUT',
+                nav_projects: 'PROJECTS',
+                nav_contact: 'CONTACT',
+                // About Section
+                section_developer: '// ABOUT ME',
+                about_title: 'Creating unique and strategic game worlds.',
+                about_p1: 'I am a <strong>multi-profile game developer</strong> specializing in the visual aspect of projects with a deep understanding of the full development cycle. My experience includes <strong>UI/UX</strong>, creating <strong>Game Ready Assets</strong>, <strong>character animation</strong>, developing <strong>visual and sound effects</strong>, creating <strong>shaders</strong>, and <strong>vector graphics</strong>.',
+                about_p2: 'My approach is based on <strong>Technical Art</strong> principles: I create visuals that <strong>integrate perfectly into the engine</strong> because I deeply understand code architecture and resource optimization. This prevents conflicts and ensures design, animation, and effects work optimally (Godot, Unity, etc.).',
+                about_p3: 'I have a keen sense of <strong>what players love and what catches their eye</strong>. I excel at creating <strong>addictive animations</strong> and appealing visuals, which is a critical factor in <strong>commercial</strong> game production for retention and monetization. Contact me for collaboration.',
+                // Skills
+                skill_uiux: 'UI / UX Design',
+                skill_char: 'Character Art / Rigging / Animation',
+                skill_vfx: 'VFX / SFX / Shaders',
+                skill_vector: 'Vector and Pixel Graphics',
+                // Projects Section
+                section_projects: '// PROJECTS',
+                projects_title: 'Selected Works.',
+                child_of_shades_project_title: 'Child of Shades"',
+                child_of_shades_project_desc: '2D side-scroller mobile game',
+                project_view: 'VIEW PROJECT →',
+                project_wip: 'in development',
+                // Contact Section
+                section_contact: '// CONTACT',
+                contact_title: 'Get in touch.',
+                copy_message: 'Discord copied!'
+            }
+        };
+
+        let currentLang = 'EN';
+        const pageTitleElement = document.getElementById('page-title');
+        const langButtons = document.querySelectorAll('.lang-button');
+        const notification = document.getElementById('copy-notification');
+        const discordTile = document.querySelector('.discord-tile');
+
+        // === 1. Функция переключения языка ===
+        function switchLanguage(lang) {
+            if (currentLang === lang) return;
+            if (!translations[lang]) return;
+
+            currentLang = lang;
+            const currentTranslations = translations[lang];
+
+            // 1. Обновляем все текстовые элементы с атрибутом data-lang
+            document.querySelectorAll('[data-lang]').forEach(element => {
+                const key = element.getAttribute('data-lang');
+                if (currentTranslations[key]) {
+                    // Обработка <strong> внутри P для секции о себе
+                    if (element.tagName === 'P' && element.closest('.about-text')) {
+                        element.innerHTML = currentTranslations[key];
+                    } else {
+                        element.textContent = currentTranslations[key];
+                    }
+                }
+            });
+
+            // 2. Обновляем заголовок страницы
+            if (pageTitleElement) {
+                pageTitleElement.textContent = currentTranslations.page_title;
+            }
+
+            // 3. Обновляем уведомление о копировании
+            notification.textContent = currentTranslations.copy_message;
+
+            // 4. Обновляем активную кнопку языка
+            langButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.getAttribute('data-language') === lang) {
+                    button.classList.add('active');
+                }
+            });
+        }
+
+        // === 2. Обработчики событий для кнопок языка ===
+        langButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const lang = button.getAttribute('data-language');
+                switchLanguage(lang);
+            });
+        });
+
+        // === 3. Логика копирования Discord ID ===
+        function showCopyNotification() {
+            notification.classList.add('visible');
+            setTimeout(() => {
+                notification.classList.remove('visible');
+            }, 2000);
+        }
+
+        function animateTileCopy(tile) {
+            tile.classList.add('copied');
+            setTimeout(() => {
+                tile.classList.remove('copied');
+            }, 300);
+        }
+
+        if (discordTile) {
+            discordTile.addEventListener('click', async (e) => {
+                e.preventDefault(); // Предотвращаем стандартное действие ссылки (которого нет, но для безопасности)
+                const valueToCopy = discordTile.getAttribute('data-copy-value');
+
+                if (valueToCopy) {
+                    try {
+                        // Используем document.execCommand('copy') для совместимости с iframe
+                        const tempInput = document.createElement('input');
+                        tempInput.value = valueToCopy;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(tempInput);
+                        
+                        showCopyNotification();
+                        animateTileCopy(discordTile);
+                    } catch (err) {
+                        console.error('Не удалось скопировать текст: ', err);
+                    }
+                }
+            });
+        }
+
+
+        // === 4. Инициализация (устанавливаем русский язык по умолчанию при загрузке) ===
+        document.addEventListener('DOMContentLoaded', () => {
+            // При первой загрузке инициализируем русский язык
+            switchLanguage('EN');
+        });
+
+    </script>
+</body>
+</html>

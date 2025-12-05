@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Elfium Art | Child of Shades</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ======================================================= */
+        /* == ГЛОБАЛЬНЫЕ СТИЛИ (КОПИЯ С INDEX.HTML) ============== */
+        /* ======================================================= */
+        :root {
+            --bg-dark: #0F0F0F;
+            --text-light: #FFFFFF;
+            --line-subtle: #333333; 
+            --text-dimmed: #AAAAAA;
+            --transition-duration: 0.25s;
+            --tile-bg: #1a1a1a;
+            --tile-border: #282828;
+            --color-accent: #ECAF93;
+
+            /* === ПЕРЕМЕННАЯ ДЛЯ РАЗМЕРА ХЕДЕРА (ПО ЗАПРОСУ ПОЛЬЗОВАТЕЛЯ) === */
+            --header-height: 80px;
+            /* =============================================================== */
+
+            /* === ПЕРЕМЕННЫЕ ОТСТУПОВ ИЗ INDEX.HTML === */
+            --spacing-xl: 50px; 
+            --spacing-l: 24px; 
+            --spacing-m: 20px; 
+            /* ==================================== */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            /* Используем calc() для автоматической подстройки под высоту хедера */
+            padding-top: calc(var(--header-height) + 40px); 
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-weight: 300;
+            position: relative;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ======================================================= */
+        /* == 1. АНИМАЦИЯ ПОЯВЛЕНИЯ (КОПИЯ С INDEX.HTML) ========= */
+        /* ======================================================= */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated-block {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards; 
+            animation-delay: 0s !important; 
+        }
+
+
+        /* ======================================================= */
+        /* == ХЕДЕР И НАВИГАЦИЯ (КОПИЯ С INDEX.HTML) ============= */
+        /* ======================================================= */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--header-height); /* ИСПОЛЬЗУЕМ НОВУЮ ПЕРЕМЕННУЮ */
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(236, 175, 147, 0.2);
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
+        }
+
+        .logo {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-light);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            margin-right: var(--spacing-m); 
+        }
+
+        .nav-links a {
+            color: var(--text-dimmed);
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 0.9em;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-light);
+        }
+
+        /* == СТИЛИ ДЛЯ ПЕРЕКЛЮЧАТЕЛЯ ЯЗЫКА ==================== */
+        .language-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--line-subtle);
+            overflow: hidden;
+            height: 32px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .lang-button {
+            color: var(--text-dimmed);
+            text-decoration: none;
+            font-size: 0.8em;
+            font-weight: 500;
+            padding: 0 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            height: 100%;
+            line-height: 30px;
+        }
+
+        .lang-button.active {
+            color: var(--bg-dark);
+            background-color: var(--color-accent);
+            cursor: default;
+            border: 1px solid var(--color-accent);
+            box-sizing: border-box;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        /* ======================================================= */
+        /* == СЕКЦИИ, ТЕКСТ, РАЗДЕЛИТЕЛИ (КОПИЯ С INDEX.HTML) ==== */
+        /* ======================================================= */
+        .divider-wrapper {
+            width: 100%;
+            padding: 0;
+            box-sizing: border-box;
+            background: linear-gradient(to right,
+                var(--bg-dark) 0%,
+                var(--line-subtle) 25%, 
+                var(--line-subtle) 75%, 
+                var(--bg-dark) 100%
+            );
+            height: 1px;
+            margin: var(--spacing-xl) 0; 
+        }
+
+        .section {
+            padding: 0; 
+            background-color: transparent;
+            margin-bottom: var(--spacing-xl); 
+        }
+        
+        /* Убираем лишний margin-bottom у последней секции в конце страницы */
+        /* ЭТОТ СТИЛЬ ТЕПЕРЬ НЕ ТРЕБУЕТСЯ ИЗ-ЗА НОВОЙ СТРУКТУРЫ, НО ОСТАВЛЯЮ ЕГО В СЛУЧАЕ НЕОБХОДИМОСТИ */
+        .container:last-of-type .section {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            color: var(--color-accent);
+            font-size: 0.85em;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 0; 
+        }
+
+        h2 {
+            color: var(--text-light);
+            font-size: 2.8em;
+            font-weight: 400;
+            margin-top: 5px; 
+            margin-bottom: var(--spacing-l); 
+            line-height: 1.1;
+        }
+        
+        /* ======================================================= */
+        /* == ПРОЕКТНЫЙ КОНТЕНТ (НОВЫЕ СТИЛИ) ==================== */
+        /* ======================================================= */
+
+        /* Стили для описания проекта */
+        .project-description {
+            font-size: 1.0em;
+            line-height: 1.8;
+            color: var(--text-dimmed);
+            font-weight: 300;
+        }
+        
+        .project-description p {
+            margin-bottom: var(--spacing-m); 
+        }
+        
+        .project-description p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Стили для скриншота */
+        .project-screenshot {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin-top: var(--spacing-l); /* 40px - отступ после заголовка/описания */
+            margin-bottom: var(--spacing-l); /* 40px - отступ перед разделителем */
+            box-sizing: border-box;
+        }
+
+        /* ======================================================= */
+        /* == ФУТЕР КОНТАКТОВ (КОПИЯ С INDEX.HTML) =============== */
+        /* ======================================================= */
+        
+        #contact-footer {
+            padding: 0; 
+            background-color: transparent;
+            border-top: none;
+            /* ИСПРАВЛЕНИЕ: ОТСТУП ПОСЛЕ ФУТЕРА */
+            margin-bottom: var(--spacing-xl); 
+        }
+        
+        .contact-tiles-big {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-m); 
+            margin-top: var(--spacing-l); 
+        }
+
+        .contact-tile {
+            display: flex !important;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+
+            background-color: var(--tile-bg);
+            border: 1px solid var(--tile-border); 
+            padding: 25px;
+            position: relative;
+            text-decoration: none;
+            min-height: 100px;
+            width: 100%;
+            box-sizing: border-box;
+
+            transition: border-color var(--transition-duration) ease-out,
+                         transform var(--transition-duration) ease-out;
+            transform: translateY(0);
+        }
+
+        .contact-tile.copied {
+            border-color: #43b581; 
+            transform: scale(0.98);
+        }
+
+        .contact-tile-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-tile::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 0;
+            background-color: var(--color-accent);
+            transition: width var(--transition-duration) ease-out;
+            z-index: 10;
+        }
+
+        .contact-tile:hover {
+            transform: translateY(-6px);
+            border-color: var(--color-accent);
+        }
+
+        .contact-tile:hover::after {
+            width: 100%;
+        }
+
+        .contact-tile h4 {
+            color: var(--text-dimmed);
+            font-size: 0.9em;
+            font-weight: 400;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            line-height: 1.2;
+        }
+
+        .contact-tile p {
+            color: var(--text-light);
+            font-size: 1.2em;
+            font-weight: 500;
+            margin: 5px 0 0 0;
+            word-break: break-all;
+            line-height: 1.2;
+        }
+
+        .contact-tile svg {
+            fill: var(--text-dimmed);
+            transition: fill var(--transition-duration) ease-out;
+            margin-right: 15px;
+            align-self: center;
+            min-width: 48px;
+            height: 48px;
+        }
+
+        .contact-tile:hover svg {
+            fill: var(--color-accent);
+        }
+
+        /* ======================================================= */
+        /* == ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ О КОПИРОВАНИИ (КОПИЯ) ====== */
+        /* ======================================================= */
+        .copy-notification {
+            position: fixed;
+            bottom: var(--spacing-m); 
+            left: 50%;
+            transform: translateX(-50%) translateY(100px); 
+            background-color: #43b581; 
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: 500;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease-out;
+            letter-spacing: 0.05em;
+        }
+
+        .copy-notification.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ======================================================= */
+        /* == АДАПТИВНОСТЬ (КОПИЯ С INDEX.HTML) ================== */
+        /* ======================================================= */
+        @media (max-width: 768px) {
+            :root {
+                --spacing-xl: 60px; 
+                --spacing-l: 30px; 
+                --spacing-m: 15px; 
+                /* ДОБАВЛЕНИЕ МОБИЛЬНОЙ ПЕРЕМЕННОЙ ДЛЯ ВЫСОТЫ ХЕДЕРА */
+                --header-height: 60px;
+            }
+
+            .header { height: var(--header-height); padding: 0 5%; } 
+            .logo { font-size: 1em; }
+            .nav-links { display: none; }
+
+            .header-controls {
+                width: auto;
+                justify-content: flex-end;
+            }
+            .language-switcher { margin-left: auto; }
+
+            body { padding-top: calc(var(--header-height) + 40px); } 
+            
+            .section { margin-bottom: var(--spacing-xl); }
+            h2 { font-size: 2.2em; margin-bottom: var(--spacing-m); }
+            .divider-wrapper { margin: var(--spacing-xl) 0; height: 1px; }
+            .contact-tiles-big { grid-template-columns: 1fr; gap: var(--spacing-m); }
+            .contact-tile p { font-size: 1.1em; }
+            .contact-tile svg { min-width: 40px; height: 40px; }
+            /* Адаптивность для проекта */
+            .project-screenshot { margin-top: var(--spacing-m); margin-bottom: var(--spacing-m); }
+        }
+    </style>
+</head>
+<body>
+    <div id="copy-notification" class="copy-notification" data-lang="copy_message">
+        Discord скопирован!
+    </div>
+
+    <div class="header">
+        <a href="index.html" class="logo animated-block">Elfium Art</a>
+        <div class="header-controls">
+            <nav class="nav-links">
+                <a href="index.html#about-section" class="animated-block" data-lang="nav_about">ОБО МНЕ</a>
+                <a href="index.html#portfolio-section" class="animated-block" data-lang="nav_projects">ПРОЕКТЫ</a>
+                <a href="index.html#contact-footer" class="animated-block" data-lang="nav_contact">КОНТАКТЫ</a>
+            </nav>
+            <div class="language-switcher animated-block">
+                <button class="lang-button" data-language="en">EN</button>
+                <button class="lang-button active" data-language="ru">RU</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="project-description-section" class="container">
+        <div class="section">
+            <p class="section-title animated-block" data-lang="project_section_small">// О ПРОЕКТЕ</p>
+            <h2 class="animated-block" data-lang="project_title_large">Дитя теней</h2>
+            
+            <div class="project-description animated-block">
+                <p data-lang="project_desc_1">Мобильная 2Д игра в жанре side-scroller с примесью bullet hell. </p>
+                <p data-lang="project_desc_2">Несмотря на крайне простое и интуитивно понятное управление в виде прыжка, который представлен тапом по любой части экрана, игра может и будет создавать непростые испытания для игрока. Множество видов врагов со своими уникальными механиками создают незабываемый игровой опыт. На выбор игроку предложены несколько режимов, начиная от простых бесконечных забегов до сложных разовых испытаний, что позволяет игре найти фанатов в виде казуальных игроков и хардкорщиков.</p>
+                <p data-lang="project_desc_3">Данный проект отлично демонстрирует мои навыки в 2Д графике и анимации.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider-wrapper animated-block"></div>
+
+    <div id="project-media-section" class="container">
+        <div class="section">
+            <p class="section-title animated-block" data-lang="project_media_small">// МЕДИА</p>
+            <h2 class="animated-block" data-lang="project_media_large">Основные наработки.</h2>
+            <img src="child_of_shades/environment_1.png" alt="Скриншот проекта" class="project-screenshot animated-block">
+        </div>
+    </div>
+    
+    <div class="divider-wrapper animated-block"></div>
+
+    <div id="contact-footer">
+        <div class="container">
+            <p class="section-title animated-block" data-lang="section_contact">// КОНТАКТЫ</p>
+            <h2 class="animated-block" data-lang="contact_title">Свяжитесь со мной.</h2>
+
+            <div class="contact-tiles-big">
+
+                <div class="card-wrapper animated-block">
+                    <a href="https://t.me/hx3k11" target="_blank" class="contact-tile telegram-tile">
+                        <svg fill="var(--text-dimmed)" width="48px" height="48px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m20.665 3.717-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
+                        </svg>
+                        <div class="contact-tile-content">
+                            <h4>Telegram</h4>
+                            <p>@hx3k11</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card-wrapper animated-block">
+                    <a class="contact-tile discord-tile" data-copy-value="elfiumdev">
+                        <svg fill="var(--text-dimmed)" width="48px" height="48px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+                            <path d="M18.942 5.556a16.299 16.299 0 0 0-4.126-1.297c-.178.321-.385.754-.529 1.097a15.175 15.175 0 0 0-4.573 0 11.583 11.583 0 0 0-.535-1.097 16.274 16.274 0 0 0-4.129 1.3c-2.611 3.946-3.319 7.794-2.965 11.587a16.494 16.494 0 0 0 5.061 2.593 12.65 12.65 0 0 0 1.084-1.785 10.689 10.689 0 0 1-1.707-.831c.143-.106.283-.217.418-.331 3.291 1.539 6.866 1.539 10.118 0 .137.114.277.225.418.331-.541.326-1.114.606-1.71.832a12.52 12.52 0 0 0 1.084 1.785 16.46 16.46 0 0 0 5.064-2.595c.415-4.396-.709-8.209-2.973-11.589zM8.678 14.813c-.988 0-1.798-.922-1.798-2.045s.793-2.047 1.798-2.047 1.815.922 1.798 2.047c.001 1.123-.793 2.045-1.798 2.045zm6.644 0c-.988 0-1.798-.922-1.798-2.045s.793-2.047 1.798-2.047 1.815.922 1.798 2.047c0 1.123-.793 2.045-1.798 2.045z"/>
+                        </svg>
+                        <div class="contact-tile-content">
+                            <h4>Discord</h4>
+                            <p>elfiumdev</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card-wrapper animated-block">
+                    <a href="mailto:elfiumart@gmail.com" class="contact-tile email-tile">
+                        <svg fill="var(--text-dimmed)" width="48px" height="48px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+                            <g>
+                                <g>
+                                    <path d="M16,16.8l13.8-9.2C29.2,5.5,27.3,4,25,4H7C4.7,4,2.8,5.5,2.2,7.6L16,16.8z"/>
+                                </g>
+                                <g>
+                                    <path d="M16.6,18.8C16.4,18.9,16.2,19,16,19s-0.4-0.1-0.6-0.2L2,9.9V23c0,2.8,2.2,5,5,5h18c2.8,0,5-2.2,5-5V9.9L16.6,18.8z"/>
+                                </g>
+                            </g>
+                        </svg>
+                        <div class="contact-tile-content">
+                            <h4>Email</h4>
+                            <p>elfiumart@gmail.com</p>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        // === ПЕРЕВОДЫ (ТОЛЬКО ДЛЯ JS, CSS СТИЛИ ВЫШЕ) =================
+        const translations = {
+            ru: {
+                // Header
+                page_title: 'Elfium Art | Дитя теней',
+                nav_about: 'ОБО МНЕ',
+                nav_projects: 'ПРОЕКТЫ',
+                nav_contact: 'КОНТАКТЫ',
+                // Project Section
+                project_section_small: '// О ПРОЕКТЕ',
+                project_title_large: 'Дитя теней',
+                project_desc_1: 'Мобильная 2Д игра в жанре side-scroller с примесью bullet hell.',
+                project_desc_2: 'Несмотря на крайне простое и интуитивно понятное управление в виде прыжка, который представлен тапом по любой части экрана, игра может и будет создавать непростые испытания для игрока. Множество видов врагов со своими уникальными механиками создают незабываемый игровой опыт. На выбор игроку предложены несколько режимов, начиная от простых бесконечных забегов до сложных разовых испытаний, что позволяет игре найти фанатов в виде казуальных игроков и хардкорщиков.',
+                project_desc_3: 'Данный проект отлично демонстрирует мои навыки в 2Д графике и анимации.',
+                project_media_small: '// МЕДИА',
+
+                project_media_large: 'Основные наработки.',
+                // Contact Section
+                section_contact: '// КОНТАКТЫ',
+                contact_title: 'Свяжитесь со мной.',
+                copy_message: 'Discord скопирован!'
+            },
+            en: {
+                // Header
+                page_title: 'Elfium Art | Child of Shades',
+                nav_about: 'ABOUT ME',
+                nav_projects: 'PROJECTS',
+                nav_contact: 'CONTACT',
+                // Project Section
+                project_section_small: '// ABOUT PROJECT',
+                project_title_large: 'Child of Shades',
+                project_desc_1: 'A mobile 2D side-scroller game with bullet hell elements.',
+                project_desc_2: 'Despite the extremely simple and intuitive controls—a single jump performed by tapping anywhere on the screen—the game can and will create challenging trials for the player. A variety of enemies with unique mechanics create an unforgettable gaming experience. Players can choose from several modes, ranging from simple endless runs to complex one-off challenges, allowing the game to find fans among both casual players and hardcore gamers.',
+                project_desc_3: 'This project perfectly demonstrates my skills in 2D graphics and animation.',
+                project_media_small: '// MEDIA',
+                project_media_large: 'Key developments.',
+                // Contact Section
+                section_contact: '// CONTACT',
+                contact_title: 'Get in touch.',
+                copy_message: 'Discord copied!'
+            }
+        };
+        
+        let currentLang = 'ru';
+        const pageTitleElement = document.getElementById('page-title');
+        const langButtons = document.querySelectorAll('.lang-button');
+        const notification = document.getElementById('copy-notification');
+        const discordTile = document.querySelector('.discord-tile');
+
+        // === 1. Функция переключения языка (КОПИЯ С INDEX.HTML) ===
+        function switchLanguage(lang) {
+            if (currentLang === lang) return;
+            if (!translations[lang]) return;
+
+            currentLang = lang;
+            const currentTranslations = translations[lang];
+
+            // 1. Обновляем все текстовые элементы с атрибутом data-lang
+            document.querySelectorAll('[data-lang]').forEach(element => {
+                const key = element.getAttribute('data-lang');
+                if (currentTranslations[key]) {
+                    // Обработка <strong> внутри P
+                    if (element.tagName === 'P' && element.closest('.project-description')) {
+                        element.innerHTML = currentTranslations[key];
+                    } else {
+                        element.textContent = currentTranslations[key];
+                    }
+                }
+            });
+
+            // 2. Обновляем заголовок страницы
+            if (pageTitleElement) {
+                pageTitleElement.textContent = currentTranslations.page_title;
+            }
+
+            // 3. Обновляем уведомление о копировании
+            notification.textContent = currentTranslations.copy_message;
+
+            // 4. Обновляем активную кнопку языка
+            langButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.getAttribute('data-language') === lang) {
+                    button.classList.add('active');
+                }
+            });
+        }
+
+        // === 2. Обработчики событий для кнопок языка (КОПИЯ С INDEX.HTML) ===
+        langButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const lang = button.getAttribute('data-language');
+                switchLanguage(lang);
+            });
+        });
+
+        // === 3. Логика копирования Discord ID (КОПИЯ С INDEX.HTML) ===
+        function showCopyNotification() {
+            notification.classList.add('visible');
+            setTimeout(() => {
+                notification.classList.remove('visible');
+            }, 2000);
+        }
+
+        function animateTileCopy(tile) {
+            tile.classList.add('copied');
+            setTimeout(() => {
+                tile.classList.remove('copied');
+            }, 300);
+        }
+
+        if (discordTile) {
+            discordTile.addEventListener('click', async (e) => {
+                e.preventDefault(); 
+                const valueToCopy = discordTile.getAttribute('data-copy-value');
+
+                if (valueToCopy) {
+                    try {
+                        const tempInput = document.createElement('input');
+                        tempInput.value = valueToCopy;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(tempInput);
+                        
+                        showCopyNotification();
+                        animateTileCopy(discordTile);
+                    } catch (err) {
+                        console.error('Не удалось скопировать текст: ', err);
+                    }
+                }
+            });
+        }
+
+
+        // === 4. Инициализация (КОПИЯ С INDEX.HTML) ===
+        document.addEventListener('DOMContentLoaded', () => {
+            switchLanguage('ru');
+        });
+
+    </script>
+</body>
+</html>
